@@ -77,74 +77,12 @@ class watson_sync:
         self.logger.debug("intents_to_remove:\n{}".format(self.pp.pformat(intents_to_remove)))
         self.logger.debug("intent_examples_to_remove:\n{}".format(self.pp.pformat(intent_examples_to_remove)))
 
-        # Entities
-        if 0:
-            watson_entities = self.conversation.list_entities(
-                workspace_id = self.workspace_id,
-                export = True,
-                page_limit=9999999
-            )
-            entities_to_add = []
-            entities_to_remove = []
-            entity_values_to_add = []
-            entity_values_to_remove = []
-            # Compare script_entities with watson_entities (to add)
-            for script_entity in bot_script["entities"]:
-                exists_entity = False
-                for watson_entity in watson_entities["entities"]:
-                    if script_entity == watson_entity["entity"]:
-                        exists_entity = True
-                        for script_value in bot_script["entities"][script_entity]:
-                            exists_value = False
-                            for watson_value in watson_entity["values"]:
-                                if script_value == watson_value["metadata"]: # ID stored on Metadata
-                                    exists_value = True
-                            if exists_value:
-                                pass
-                            else:
-                                entity_values_to_add.append([script_entity, script_value])
-                if exists_entity:
-                    pass
-                else:
-                    entity_to_add = {
-                        "entity_id": script_entity,
-                        "data": bot_script["entities"][script_entity]
-                    }
-                    entities_to_add.append(entity_to_add)
-            # Compare watson_entities with script_entities (to remove)
-            for watson_entity in watson_entities["entities"]:
-                exists_entity = False
-                for script_entity in bot_script["entities"]:
-                    if script_entity == watson_entity["entity"]:
-                        exists_entity = True
-                        for watson_value in watson_entity["values"]:
-                            exists_value = False
-                            for script_value in bot_script["entities"][script_entity]:
-                                if script_value == watson_value["value"]:
-                                    exists_value = True
-                            if exists_value:
-                                pass
-                            else:
-                                entity_values_to_remove.append([watson_entity, watson_value])
-                if exists_entity:
-                    pass
-                else:
-                    entities_to_remove.append(watson_entity)
-            self.logger.debug("entities_to_add:\n{}".format(self.pp.pformat(entities_to_add)))
-            self.logger.debug("entity_values_to_add:\n{}".format(self.pp.pformat(entity_values_to_add)))
-            self.logger.debug("entities_to_remove:\n{}".format(self.pp.pformat(entities_to_remove)))
-            self.logger.debug("entity_values_to_remove:\n{}".format(self.pp.pformat(entity_values_to_remove)))
-
         # Return
         diff = {
             "intents_to_add": intents_to_add,
             "intent_examples_to_add": intent_examples_to_add,
             "intents_to_remove": intents_to_remove,
             "intent_examples_to_remove": intent_examples_to_remove,
-            #"entities_to_add": entities_to_add,
-            #"entities_to_remove": entities_to_remove,
-            #"entity_values_to_add": entity_values_to_add,
-            #"entity_values_to_remove": entity_values_to_remove
         }
         self.sync_intents(diff)
         return diff
@@ -157,20 +95,3 @@ class watson_sync:
                 intent = intent["intent_id"],
                 examples = intent["intent_data"]["default"]["es"]
             )
-
-    #def sync_entities(self, diff):
-    #    for entity in diff["entities_to_add"]:
-    #        values = []
-    #        for value in entity["data"]:
-    #
-    #            value = {
-    #                "value": value, #main concept
-    #                "metadata": {"value_id": value},
-    #                "synonyms": []
-    #            }
-    #            values.append(value)
-    #        response = self.conversation.create_entity(
-    #            workspace_id = self.workspace_id,
-    #            entity = entity["name"],
-    #            values = values
-    #        )
