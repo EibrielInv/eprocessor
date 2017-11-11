@@ -104,9 +104,10 @@ class bot_script_loader:
                 entities_data[inf_splitted[-1]] = {}
             entities_data[inf_splitted[-1]][inf_splitted[-2]] = self.load_text_file(intent_path)
 
-        self.logger.debug("tree:\n{}".format(self.pp.pformat(tree_folders)))
-        self.logger.debug("intents:\n{}".format(self.pp.pformat(intents_data)))
-        self.logger.debug("entities:\n{}".format(self.pp.pformat(entities_data)))
+        if False:
+            self.logger.debug("tree:\n{}".format(self.pp.pformat(tree_folders)))
+            self.logger.debug("intents:\n{}".format(self.pp.pformat(intents_data)))
+            self.logger.debug("entities:\n{}".format(self.pp.pformat(entities_data)))
 
         bot_script = {
             "tree": tree_folders,

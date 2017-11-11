@@ -31,8 +31,6 @@ bot_script = bot_loader.load(bot_script_path)
 watson_syncer = watson_sync(Config.WATSON_USERNAME, Config.WATSON_PASSWORD, "EibrielBot Processor (es)")
 watson_syncer.watson_diff(bot_script)
 
-lala()
-
 # Traverse dialog tree
 
 context = {

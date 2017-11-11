@@ -39,12 +39,16 @@ class watson_sync:
                     for script_example in bot_script["intents"][script_intent]["default"]["es"]:
                         exists_example = False
                         for watson_example in watson_intent["examples"]:
-                            if script_example["text"] == watson_example["text"]:
+                            if script_example["text"].lower() == watson_example["text"].lower():
                                 exists_example = True
                         if exists_example:
                             pass
                         else:
-                            intent_examples_to_add.append([script_intent, script_example])
+                            intent_example_to_add = {
+                                "intent_id": script_intent,
+                                "text": script_example["text"]
+                            }
+                            intent_examples_to_add.append(intent_example_to_add)
             if exists_intent:
                 pass
             else:
@@ -62,16 +66,23 @@ class watson_sync:
                     for watson_example in watson_intent["examples"]:
                         exists_example = False
                         for script_example in bot_script["intents"][script_intent]["default"]["es"]:
-                            if script_example["text"] == watson_example["text"]:
+                            if script_example["text"].lower() == watson_example["text"].lower():
                                 exists_example = True
                         if exists_example:
                             pass
                         else:
-                            intent_examples_to_remove.append([watson_intent, watson_example])
+                            intent_example_to_remove = {
+                                "intent_id": watson_intent["intent"],
+                                "text": watson_example["text"]
+                            }
+                            intent_examples_to_remove.append(intent_example_to_remove)
             if exists_intent:
                 pass
             else:
-                intents_to_remove.append(watson_intent)
+                intent_to_remove = {
+                    "intent_id": watson_intent["intent"],
+                }
+                intents_to_remove.append(intent_to_remove)
         self.logger.debug("intents_to_add:\n{}".format(self.pp.pformat(intents_to_add)))
         self.logger.debug("intent_examples_to_add:\n{}".format(self.pp.pformat(intent_examples_to_add)))
         self.logger.debug("intents_to_remove:\n{}".format(self.pp.pformat(intents_to_remove)))
@@ -94,4 +105,21 @@ class watson_sync:
                 workspace_id = self.workspace_id,
                 intent = intent["intent_id"],
                 examples = intent["intent_data"]["default"]["es"]
+            )
+        for intent in diff["intents_to_remove"]:
+            response = self.conversation.create_intent(
+                workspace_id = self.workspace_id,
+                intent = intent["intent_id"],
+            )
+        for intent_example in diff["intent_examples_to_add"]:
+            response = self.conversation.create_example(
+                workspace_id = self.workspace_id,
+                intent = intent_example["intent_id"],
+                text = intent_example["text"]
+            )
+        for intent_example in diff["intent_examples_to_remove"]:
+            response = self.conversation.delete_example(
+                workspace_id = self.workspace_id,
+                intent = intent_example["intent_id"],
+                text = intent_example["text"]
             )
