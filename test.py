@@ -44,12 +44,19 @@ class TestTreeWalker(unittest.TestCase):
                                        current_branch, initial_branch)
         self.assertEqual(step_branch, "/0300_three/0100_one")
 
-    def test_bifurcation_inside(self):
-        current_branch = "/0300_three/0100_one/0100_one_one"
+    def test_bifurcation_leaving(self):
+        current_branch = "/0300_three"
         initial_branch = "/0300_three/0100_one/0100_one_one"
         step_branch = self.walker.step(self.test_tree,
                                        current_branch, initial_branch)
         self.assertEqual(step_branch, "/0400_four")
+
+    def test_bifurcation_jump(self):
+        current_branch = "/0400_four"
+        initial_branch = "/0200_two"
+        step_branch = self.walker.step(self.test_tree,
+                                       current_branch, initial_branch)
+        self.assertEqual(step_branch, "/0500_five")
 
 
 class TestScriptLoader(unittest.TestCase):

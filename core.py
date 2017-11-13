@@ -53,11 +53,9 @@ class Core:
                 initial_branch = self.current_branch
                 continue
             # Avance step
-            print(self.current_branch)
             self.current_branch = self.walker.step(tree,
                                                    self.current_branch,
                                                    initial_branch)
-            print(self.current_branch)
             # If not eval and not goto, iterate again
             if not answer["evaluate"] and answer["goto"] is None:
                 continue
