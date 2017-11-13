@@ -8,15 +8,8 @@ from simple_analyzer import SimpleAnalyzer
 class TestTreeWalker(unittest.TestCase):
     def setUp(self):
         self.walker = tree_walker()
-        self.test_tree = [
-            "/0100_root",
-            "/0200_two",
-            "/0300_three",
-            "/0300_three/0100_one",
-            "/0300_three/0200_two",
-            "/0400_four",
-            "/0500_five"
-        ]
+        from test_values import test_tree
+        self.test_tree = test_tree
 
     def test_simple(self):
         current_branch = "/0100_root"
@@ -50,6 +43,13 @@ class TestTreeWalker(unittest.TestCase):
         step_branch = self.walker.step(self.test_tree,
                                        current_branch, initial_branch)
         self.assertEqual(step_branch, "/0300_three/0100_one")
+
+    def test_bifurcation_inside(self):
+        current_branch = "/0300_three/0100_one/0100_one_one"
+        initial_branch = "/0300_three/0100_one/0100_one_one"
+        step_branch = self.walker.step(self.test_tree,
+                                       current_branch, initial_branch)
+        self.assertEqual(step_branch, "/0400_four")
 
 
 class TestScriptLoader(unittest.TestCase):

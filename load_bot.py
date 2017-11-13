@@ -3,8 +3,10 @@ import js2py
 import pprint
 import logging
 
+
 class MissingLanguage(Exception):
     pass
+
 
 class bot_script_loader:
     def __init__(self):
@@ -96,7 +98,9 @@ class bot_script_loader:
         return self.bot_script_["logic_eval"]
 
     def eval_logic(self, branch, context, input_data, text):
-        answer = self.bot_script_["logic_eval"][branch](context, input_data, text)
+        answer = self.bot_script_["logic_eval"][branch](context,
+                                                        input_data,
+                                                        text)
         answer = answer.to_dict()
         return answer
 

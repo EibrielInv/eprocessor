@@ -3,6 +3,7 @@ test_tree = [
     "/0200_two",
     "/0300_three",
     "/0300_three/0100_one",
+    "/0300_three/0100_one/0100_one_one",
     "/0300_three/0200_two",
     "/0400_four",
     "/0500_five"

@@ -1,6 +1,5 @@
 import os
 
-from config import Config
 from tree_walker import tree_walker
 
 
@@ -17,45 +16,50 @@ class Core:
             "entities": []
         }
         self.input_data = self.input_data_template
-        self.continue_loop = True
         self.current_branch = None
-        self.input_text = None
-        self.analysis = None
         self.bot_script = bot_script
         self.analyzer = analyzer
 
     def iteration(self, input_text):
+        tree = self.bot_script.get_tree()
         initial_branch = self.current_branch
-        current_branch = self.walker.step(self.bot_script.get_tree(),
-                                          self.current_branch, initial_branch)
-
-        self.input_data = self.input_data_template
-        analysis = self.analyzer.analize(input_text)
-
-        if analysis is not None:
-            # print (watson_analysis)
-            self.input_data["intents"] = analysis["intents"]
-            self.input_data["entities"] = analysis["entities"]
-        if current_branch is None:
-            current_branch = bot_script["tree"][0]
-            initial_branch = None
-        depth_array = current_branch.split("/")
-        branch_path = ""
-        for depth_item in depth_array:
-            if depth_item != "":
-                branch_path = os.path.join(branch_path, depth_item)
-
-        text = self.bot_script.get_text()[branch_path]
-        answer = self.bot_script.eval_logic(branch_path,
-                                            self.context,
-                                            self.input_data,
-                                            text)
-        if answer["evaluate"] is False:
-            initial_branch = None
-            current_branch = walker.step(bot_script["tree"],
-                                         current_branch, initial_branch)
-            pass
-        elif answer["goto"] is not None:
-            current_branch = answer["goto"]
-
-        return answer["text"]["es"]
+        final_answer = []
+        while 1:
+            self.input_data = self.input_data_template
+            # Analize input and apply
+            analysis = self.analyzer.analize(input_text)
+            if analysis is not None:
+                self.input_data["intents"] = analysis["intents"]
+                self.input_data["entities"] = analysis["entities"]
+            # If first step, set to begining
+            if self.current_branch is None:
+                self.current_branch = tree[0]
+            # Remove / at the begining of current branch path
+            branch_id = self.current_branch[1:]
+            # Get text for current branch
+            text = self.bot_script.get_text()[branch_id]
+            # Feed logic with context, input data and text
+            answer = self.bot_script.eval_logic(branch_id,
+                                                self.context,
+                                                self.input_data,
+                                                text)
+            # If eval, save text
+            if answer["evaluate"]:
+                final_answer += answer["text"]["es"]
+                initial_branch = self.current_branch
+            # If goto, continue
+            if answer["evaluate"] and answer["goto"] is not None:
+                self.current_branch = answer["goto"]
+                initial_branch = self.current_branch
+                continue
+            # Avance step
+            print(self.current_branch)
+            self.current_branch = self.walker.step(tree,
+                                                   self.current_branch,
+                                                   initial_branch)
+            print(self.current_branch)
+            # If not eval and not goto, iterate again
+            if not answer["evaluate"] and answer["goto"] is None:
+                continue
+            break
+        return final_answer
