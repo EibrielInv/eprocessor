@@ -1,29 +1,42 @@
-test_episodes = [
-    {'episode_id': '0100_one',
-     'data': [
-        {'scene_id': '0100_one',
-         'data': {
-            'cut_id:0100': {'lang_id:es': {'text': 'Corte 0100 - spanish'},
-                            'lang_id:en': {'text': 'Cut 0100 - english'}},
-            'cut_id:0200': {'lang_id:es': {'text': 'Corte 0200 - spanish'},
-                            'lang_id:en': {'text': 'Cut 0200 - english'}}
-                 }
-         }
-      ]
-     }
-]
+test_episodes = (
+    {'0100_one': {
+        'scenes_ids': ['0100_one'],
+        'scenes': {
+            '0100_one': {
+                'scene_id': '0100_one',
+                'cuts': {
+                    'cut_id:0100': {
+                        'lang_id:es': {
+                            'text': ['Corte 0100 - spanish']},
+                        'lang_id:en': {'text': ['Cut 0100 - english']}
+                    },
+                    'cut_id:0200': {
+                        'lang_id:es': {'text': ['Corte 0200 - spanish']},
+                        'lang_id:en': {'text': ['Cut 0200 - english']}}
+                    },
+                'cuts_ids': ['0100', '0200']}
+        },
+        'episode_id': '0100_one'}
+     },
+    ['0100_one']
+)
 
-test_interactions = [
-    {'answers': {
-        'answer_id:one': {'lang_id:en': {'text': 'Answer to one english'},
-                          'lang_id:es': {'text': 'Respuesta a uno - spanish'}
-                          }
-    },
-     'interaction_id': 'one',
-     'examples': {'lang_id:en': {'text': 'one'},
-                  'lang_id:es': {'text': 'uno'}},
-     'logic_code': 'answer_id = "one";\n'}
-]
+test_interactions = {
+    'one': {
+        'interaction_id': 'one',
+        'answers': (
+            {'answer_id:one': {
+                'lang_id:en': {'text': ['Answer to one english']},
+                'lang_id:es': {'text': ['Respuesta a uno - spanish']}
+            }
+            },
+            ['one']
+        ),
+        'logic_code': 'answer_id = "one";\n',
+        'examples': ({'lang_id:en': {'text': ['one']},
+                     'lang_id:es': {'text': ['uno']}}, [])
+    }
+}
 
 test_tree = [
     "/0100_root",

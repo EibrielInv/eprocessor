@@ -1,5 +1,6 @@
 import os
 import sys
+import time
 import logging
 
 from watson_sync import watson_sync
@@ -28,8 +29,14 @@ while 1:
     if first_iteration:
         input_text = None
     else:
-        input_text = input("> ")
+        input_text = input("\n> ")
     output_text = core_engine.iteration(input_text)
     for msg in output_text:
-        print(msg["text"])
+        for msgg in msg:
+            if msgg == "[pause:1000]":
+                time.sleep(2)
+            elif msgg == "[user_input]":
+                pass
+            else:
+                print("\n", msgg)
     first_iteration = False

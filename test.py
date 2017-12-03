@@ -76,7 +76,7 @@ class TestScriptLoader(unittest.TestCase):
         interactions = self.bot_loader.get_interactions()
         for interaction in interactions:
             # Remove compiled code
-            del(interaction["logic"])
+            del(interactions[interaction]["logic"])
         self.assertEqual(interactions, self.test_interactions)
 
     if 0:
