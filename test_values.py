@@ -1,3 +1,30 @@
+test_episodes = [
+    {'episode_id': '0100_one',
+     'data': [
+        {'scene_id': '0100_one',
+         'data': {
+            'cut_id:0100': {'lang_id:es': {'text': 'Corte 0100 - spanish'},
+                            'lang_id:en': {'text': 'Cut 0100 - english'}},
+            'cut_id:0200': {'lang_id:es': {'text': 'Corte 0200 - spanish'},
+                            'lang_id:en': {'text': 'Cut 0200 - english'}}
+                 }
+         }
+      ]
+     }
+]
+
+test_interactions = [
+    {'answers': {
+        'answer_id:one': {'lang_id:en': {'text': 'Answer to one english'},
+                          'lang_id:es': {'text': 'Respuesta a uno - spanish'}
+                          }
+    },
+     'interaction_id': 'one',
+     'examples': {'lang_id:en': {'text': 'one'},
+                  'lang_id:es': {'text': 'uno'}},
+     'logic_code': 'answer_id = "one";\n'}
+]
+
 test_tree = [
     "/0100_root",
     "/0200_two",
