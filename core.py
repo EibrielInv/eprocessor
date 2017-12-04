@@ -34,17 +34,36 @@ class Core:
         self.cuts_ids_count = 0
 
         self.first_time = True
+        self.last_interaction = None
 
     def iteration(self, input_text):
         final_answer = []
         while 1:
-            if 0:
+            if input_text is not None:
                 self.input_data = self.input_data_template
                 # Analize input and apply
                 analysis = self.analyzer.analize(input_text)
+                input_text = None
                 if analysis is not None:
-                    self.input_data["intents"] = analysis["intents"]
-                    self.input_data["entities"] = analysis["entities"]
+                    self.input_data["interactions"] = analysis["interactions"]
+                interactions = self.bot_script.get_interactions()
+                if len(analysis["interactions"]) > 0:
+                    interaction = analysis["interactions"][0]["interaction"]
+                    answers = interactions[interaction]["answers"][0]
+                    print(self.current_cut_id)
+                    answer = interactions[interaction]["logic"](
+                                                        self.last_interaction,
+                                                        self.current_cut_id)
+
+                    answer_id = answer["answer_id"]
+                    if answer_id is not None:
+                        answer_txt = answers[
+                            "answer_id:{}".format(answer_id)][
+                                "lang_id:es"]["text"][0]
+                        final_answer.append([answer_txt])
+                        self.last_interaction = interaction
+                        if answer["pause"]:
+                            break
 
             # If first step, set to begining
             if not self.first_time:

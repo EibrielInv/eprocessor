@@ -1,22 +1,11 @@
-function (context, input_data, text) {
-    goto = null;
-    evaluate = false;
-    text_title = "default";
+function (last_interaction, cut_id) {
+    answer_id = null;
+    pause = false;
 
-    best_intent = null;
-    best_intent_confidence = null;
-    if (input_data["intents"].length > 0) {
-        if (input_data["intents"][0]["confidence"] > 0.7) {
-            best_intent = input_data["intents"][0]["intent"]
-            best_intent_confidence = input_data["intents"][0]["confidence"];
-        }
-    }
     /*code*/
     returning = {
-        "context": context,
-        "text": text[text_title],
-        "goto": goto,
-        "evaluate": evaluate
+        "answer_id": answer_id,
+        "pause": pause
     }
     return returning;
 }
