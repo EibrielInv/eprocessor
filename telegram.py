@@ -11,13 +11,20 @@ class telegram:
         self.useragent = useragent
 
     # Sends a message to Telegram
-    def send_to_telegram(self, chat_id, answer):
+    def sendMessage(self, chat_id, answer):
         msg = {
-                'chat_id': chat_id,
-                'parse_mode': 'Markdown',
-                'text': answer,
-            }
+            'chat_id': chat_id,
+            'parse_mode': 'HTML',
+            'text': answer,
+        }
         r = self.send_to_bot('sendMessage', data=msg)
+
+    def sendPhoto(self, chat_id, image_url):
+        msg = {
+            'chat_id': chat_id,
+            'photo': image_url,
+        }
+        r = self.send_to_bot('sendPhoto', data=msg)
 
     def send_to_bot(self, access_point, data=None):
         headers = {'user-agent': self.useragent}
