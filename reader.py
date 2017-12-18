@@ -42,6 +42,7 @@ class listen_telegram(threading.Thread):
         telegram_conection.open_session()
         while 1:
             r = telegram_conection.get_update()  # Listen for new messages
+            print(r)
             if not r:
                 continue  # If no messages continue loop
             r_json = r.json()
